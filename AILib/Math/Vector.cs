@@ -194,6 +194,48 @@ namespace AILib.Math
             return ret;
         }
 
+        public static Vector operator -(float a, Vector b)
+        {
+            Vector ret = new Vector(b.Length);
+            int i = 0;
+            int simdLength = Vector<float>.Count;
+            for (i = 0; i <= ret.Length - simdLength; i += simdLength)
+            {
+                var res = new Vector<float>(a) - new Vector<float>(b.data, i);
+                res.CopyTo(ret.data, i);
+            }
+            for (; i < ret.Length; ++i)
+            {
+                ret.data[i] = a - b.data[i];
+            }
+            return ret;
+        }
+
+        public static Vector operator -(Vector a, float b)
+        {
+            /*
+            Vector ret = new Vector(a.Length);
+            for (int i = 0; i < a.Length; i++)
+            {
+                ret.data[i] = a.data[i] * b;
+            }
+            return ret;*/
+
+            Vector ret = new Vector(a.Length);
+            int i = 0;
+            int simdLength = Vector<float>.Count;
+            for (i = 0; i <= ret.Length - simdLength; i += simdLength)
+            {
+                var res = new Vector<float>(a.data, i) - new Vector<float>(b);
+                res.CopyTo(ret.data, i);
+            }
+            for (; i < ret.Length; ++i)
+            {
+                ret.data[i] = a.data[i] - b;
+            }
+            return ret;
+        }
+
         public static Vector Hadamard(Vector a, Vector b)
         {
             if (a.Length != b.Length)
@@ -237,6 +279,76 @@ namespace AILib.Math
             }
             return ret;
         }
+
+        public static Vector Min(Vector a, Vector b)
+        {
+            Vector ret = new Vector(a.Length);
+            int i = 0;
+            int simdLength = Vector<float>.Count;
+            for (i = 0; i <= ret.Length - simdLength; i += simdLength)
+            {
+                var res = System.Numerics.Vector.Min(new Vector<float>(a.data, i), new Vector<float>(b.data, i));
+                res.CopyTo(ret.data, i);
+            }
+            for (; i < ret.Length; ++i)
+            {
+                ret.data[i] = System.Math.Min(a.data[i], b.data[i]);
+            }
+            return ret;
+        }
+
+        public static Vector Max(Vector a, Vector b)
+        {
+            Vector ret = new Vector(a.Length);
+            int i = 0;
+            int simdLength = Vector<float>.Count;
+            for (i = 0; i <= ret.Length - simdLength; i += simdLength)
+            {
+                var res = System.Numerics.Vector.Max(new Vector<float>(a.data, i), new Vector<float>(b.data, i));
+                res.CopyTo(ret.data, i);
+            }
+            for (; i < ret.Length; ++i)
+            {
+                ret.data[i] = System.Math.Max(a.data[i], b.data[i]);
+            }
+            return ret;
+        }
+
+        public static Vector Min(Vector a, float b)
+        {
+            Vector ret = new Vector(a.Length);
+            int i = 0;
+            int simdLength = Vector<float>.Count;
+            for (i = 0; i <= ret.Length - simdLength; i += simdLength)
+            {
+                var res = System.Numerics.Vector.Min(new Vector<float>(a.data, i), new Vector<float>(b));
+                res.CopyTo(ret.data, i);
+            }
+            for (; i < ret.Length; ++i)
+            {
+                ret.data[i] = System.Math.Min(a.data[i], b);
+            }
+            return ret;
+        }
+
+        public static Vector Max(Vector a, float b)
+        {
+            Vector ret = new Vector(a.Length);
+            int i = 0;
+            int simdLength = Vector<float>.Count;
+            for (i = 0; i <= ret.Length - simdLength; i += simdLength)
+            {
+                var res = System.Numerics.Vector.Max(new Vector<float>(a.data, i), new Vector<float>(b));
+                res.CopyTo(ret.data, i);
+            }
+            for (; i < ret.Length; ++i)
+            {
+                ret.data[i] = System.Math.Max(a.data[i], b);
+            }
+            return ret;
+        }
+
+
 
         public static implicit operator float[] (Vector a)
         {

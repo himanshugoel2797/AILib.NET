@@ -9,6 +9,13 @@ namespace AILib.ANN.ActivationFunctions
 {
     public class Tanh : IActivationFunction
     {
+        private Vector tanh(Vector o)
+        {
+            var i = Vector.Max(Vector.Min(o, 2), -2);
+            Vector i_sq = (i * i);
+            return (i * (i_sq * 4.0f + 15.0f)) / (i_sq * i_sq + i_sq * 9 + 15.0f);
+        }
+
         public float Activation(float o)
         {
             return (float)System.Math.Tanh(o);
@@ -21,18 +28,13 @@ namespace AILib.ANN.ActivationFunctions
 
         public Vector Activation(Vector o)
         {
-            Vector n = new Vector(o.Length);
-            for (int i = 0; i < n.Length; i++)
-                n[i] = Activation(o[i]);
-            return n;
+            return tanh(o);
         }
 
         public Vector DerivActivation(Vector o)
         {
-            Vector n = new Vector(o.Length);
-            for (int i = 0; i < n.Length; i++)
-                n[i] = DerivActivation(o[i]);
-            return n;
+            Vector a = tanh(o);
+            return 1 - (a * a);
         }
     }
 }

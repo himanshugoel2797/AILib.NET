@@ -128,8 +128,8 @@ namespace NeuralNetworkTest
         {
             //Generator genFunc = new Generator();
             //Discriminator disc = new Discriminator();
-            NeuralNetwork generator = new NeuralNetwork(new int[] { 100, 128, 256, 512, 1024, 48 * 48 }, new IActivationFunction[] { null, new Tanh(), new Tanh(), new Tanh(), new Tanh(), new Sigmoid() }, new CrossEntropy(), new SGD());
-            NeuralNetwork discriminator = new NeuralNetwork(new int[] { 48 * 48, 1024, 512, 256, 256, 128, 1 }, new IActivationFunction[] { null, new Tanh(), new Tanh(), new Tanh(), new Tanh(), new Tanh(), new Sigmoid() }, new CrossEntropy(), new SGD());
+            NeuralNetwork generator = new NeuralNetwork(new int[] { 100, 128, 256, 512, 1024, 48 * 48 }, new IActivationFunction[] { null, new Tanh(), new Tanh(), new Tanh(), new Tanh(), new SoftStep() }, new CrossEntropy(), new SGD());
+            NeuralNetwork discriminator = new NeuralNetwork(new int[] { 48 * 48, 1024, 512, 256, 256, 128, 1 }, new IActivationFunction[] { null, new Tanh(), new Tanh(), new Tanh(), new Tanh(), new Tanh(), new SoftStep() }, new CrossEntropy(), new SGD());
 
             Random rng = new Random(0);
 
