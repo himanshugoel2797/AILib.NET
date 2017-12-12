@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AILib.Math;
+using AILib.Math.GPU;
 
 namespace AILib.ANN.ActivationFunctions
 {
@@ -21,12 +21,14 @@ namespace AILib.ANN.ActivationFunctions
 
         public Vector Activation(Vector o)
         {
-            return o / (1 + Vector.Abs(o));
+            //return o / (1 + Vector.Abs(o));
+            return null;
         }
 
         public Vector DerivActivation(Vector o)
         {
-            return 1 / ((o + 1.0f) * (o + 1.0f));
+            //return 1 / ((o + 1.0f) * (o + 1.0f));
+            return null;
         }
     }
 }

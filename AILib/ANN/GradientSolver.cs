@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AILib.Math;
+using AILib.Math.GPU;
 
 namespace AILib.ANN
 {
@@ -34,15 +34,15 @@ namespace AILib.ANN
         {
             delta[net.LayerCount - 1] = net.LossFunction.LossDeriv(net, a[net.LayerCount - 1], z[net.LayerCount - 2], expected);// Vector.Hadamard(, derivActivationFunc(z[layers.Length - 2], layers.Length - 1));
             nabla_b[net.LayerCount - 1] = delta[net.LayerCount - 1];
-            nabla_w[net.LayerCount - 1] = Matrix.MultiplyToMatrix(delta[net.LayerCount - 1], a[net.LayerCount - 2]);
+            Matrix.MultiplyToMatrix(delta[net.LayerCount - 1], a[net.LayerCount - 2], ref nabla_w[net.LayerCount - 1]);
 
             for (int i = net.LayerCount - 2; i > 0; i--)
             {
                 Vector derivAct = net.ActivationFunctions[i].DerivActivation(z[i - 1]);
-                delta[i] = Vector.Hadamard(Matrix.TransposedMultiply(net.Weights[i + 1], delta[i + 1]), derivAct);
+                Matrix.TransposedMultiply(net.Weights[i + 1], delta[i + 1], derivAct, ref delta[i]);
 
                 nabla_b[i] = delta[i];
-                nabla_w[i] = Matrix.MultiplyToMatrix(delta[i], a[i - 1]);
+                Matrix.MultiplyToMatrix(delta[i], a[i - 1], ref nabla_w[i]);
             }
 
             return (nabla_w, nabla_b);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AILib.Math;
+using AILib.Math.GPU;
 using Superbest_random;
 
 namespace AILib.ANN
@@ -100,7 +100,7 @@ namespace AILib.ANN
             Vector res = new Vector(inputs);
             for (int i = 1; i < layers.Length; i++)
             {
-                res = (Weights[i] * res) + Biases[i];
+                Matrix.Madd(Weights[i], res, Biases[i], ref res);
                 res = ActivationFunctions[i].Activation(res);
             }
 
@@ -122,7 +122,7 @@ namespace AILib.ANN
                 if (a[i] == null) a[i] = new Vector(layers[i]);
                 if (z[i - 1] == null) z[i - 1] = new Vector(layers[i]);
 
-                z[i - 1] = (Weights[i] * a[i - 1]) + Biases[i];
+                Matrix.Madd(Weights[i], a[i - 1], Biases[i], ref z[i - 1]);
                 a[i] = ActivationFunctions[i].Activation(z[i - 1]);
             }
 

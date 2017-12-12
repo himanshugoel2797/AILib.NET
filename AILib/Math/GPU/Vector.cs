@@ -26,11 +26,25 @@ namespace AILib.Math.GPU
 
             buffer = Accelerator.CreateMemory(l * sizeof(float), true, true);
             dirty = true;
+            progInit();
+        }
 
+        public Vector(float[] l)
+        {
+            Length = l.Length;
+            data = l;
+
+            buffer = Accelerator.CreateMemory(l.Length * sizeof(float), true, true);
+            dirty = true;
+            progInit();
+        }
+
+        private void progInit()
+        {
             if (prog == null)
             {
                 prog = Accelerator.CreateProgram(File.ReadAllText("OpenCL/vector.cl"));
-                //kernels["matrixMul"] = Accelerator.CreateKernel("matrixMul", prog);
+                kernels["msub"] = Accelerator.CreateKernel("msub", prog);
             }
         }
 
@@ -41,7 +55,8 @@ namespace AILib.Math.GPU
                 Accelerator.SubmitMemoryWrite(buffer, 0, Length * sizeof(float), data);
                 dirty = false;
             }
-            else if (pullFromGPU)
+
+            if (pullFromGPU)
             {
                 Accelerator.SubmitMemoryRead(buffer, 0, Length * sizeof(float), data);
                 pullFromGPU = false;
@@ -55,7 +70,7 @@ namespace AILib.Math.GPU
                 if (pullFromGPU | dirty)
                 {
                     updateMatrix();
-                    Accelerator.Barrier();
+                    Accelerator.WaitFinish();
                 }
 
                 return data[x];
@@ -71,6 +86,45 @@ namespace AILib.Math.GPU
                 data[x] = value;
                 dirty = true;
             }
+        }
+
+        public static implicit operator float[](Vector v)
+        {
+            return v.data;
+        }
+
+        public override string ToString()
+        {
+            string r = "[";
+            for(int i = 0; i < Length; i++)
+            {
+                r += this[i];
+                if (i < Length - 1)
+                    r += ", ";
+            }
+
+            return r + "]";
+        }
+
+        public static void MSub(Vector a, float b, ref Vector c)
+        {
+            //Setup the program and call it
+            bool wereDirty = (a.dirty | c.dirty);
+            if (a.dirty) a.updateMatrix();
+            if (c.dirty) c.updateMatrix();
+
+            if (wereDirty) Accelerator.WaitFinish();
+
+            c.pullFromGPU = true;
+            c.dirty = false;
+
+            var k = kernels["msub"];
+            k.SetArgument(0, Accelerator.intPtrSize, c.buffer.mem);
+            k.SetArgument(1, Accelerator.intPtrSize, a.buffer.mem);
+            k.SetArgument(2, sizeof(float), b);
+            k.SetArgument(3, sizeof(int), a.Length);
+
+            Accelerator.SubmitProgram(k, 2, null, new[] { (IntPtr)1024, (IntPtr)1024 }, new[] { (IntPtr)16, (IntPtr)16 });
         }
     }
 }

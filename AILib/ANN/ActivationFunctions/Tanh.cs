@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AILib.Math;
+using AILib.Math.GPU;
 
 namespace AILib.ANN.ActivationFunctions
 {
@@ -11,9 +11,10 @@ namespace AILib.ANN.ActivationFunctions
     {
         private Vector tanh(Vector o)
         {
-            var i = Vector.Max(Vector.Min(o, 2), -2);
-            Vector i_sq = (i * i);
-            return (i * (i_sq * 4.0f + 15.0f)) / (i_sq * i_sq + i_sq * 9 + 15.0f);
+            //var i = Vector.Max(Vector.Min(o, 2), -2);
+            //Vector i_sq = (i * i);
+            //return (i * (i_sq * 4.0f + 15.0f)) / (i_sq * i_sq + i_sq * 9 + 15.0f);
+            return null;
         }
 
         public float Activation(float o)
@@ -33,8 +34,9 @@ namespace AILib.ANN.ActivationFunctions
 
         public Vector DerivActivation(Vector o)
         {
-            Vector a = tanh(o);
-            return 1 - (a * a);
+            //Vector a = tanh(o);
+            //return 1 - (a * a);
+            return null;
         }
     }
 }

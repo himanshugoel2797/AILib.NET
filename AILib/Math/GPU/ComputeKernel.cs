@@ -1,4 +1,5 @@
-﻿using OpenCL.Net;
+﻿using System;
+using OpenCL.Net;
 
 namespace AILib.Math.GPU
 {

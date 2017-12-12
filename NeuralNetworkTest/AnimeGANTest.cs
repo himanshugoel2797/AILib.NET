@@ -12,7 +12,7 @@ using AILib.ANN;
 using AILib.ANN.ActivationFunctions;
 using AILib.ANN.LossFunctions;
 using AILib.ANN.Optimizers;
-using AILib.Math;
+using AILib.Math.GPU;
 using Superbest_random;
 
 namespace NeuralNetworkTest

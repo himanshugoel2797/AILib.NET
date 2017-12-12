@@ -20,6 +20,11 @@ namespace NeuralNetworkTest
 
             Matrix a = new Matrix(2, 2);
             Matrix b = new Matrix(2, 2);
+            Matrix c = new Matrix(2, 2);
+
+            Vector v0 = new Vector(2);
+            Vector v1 = new Vector(2);
+            Vector v2 = new Vector(2);
 
             a[0, 0] = 1;
             a[0, 1] = 2;
@@ -31,8 +36,49 @@ namespace NeuralNetworkTest
             b[1, 0] = 5;
             b[1, 1] = 8;
 
-            var c = a * b;
-            Console.WriteLine(c[0, 0]);
+            v0[0] = 1;
+            v0[1] = 2;
+
+            v1[0] = 4;
+            v1[1] = 8;
+
+            Matrix.Multiply(a, b, ref c);
+            Console.WriteLine("Multiply:");
+            Console.WriteLine("a=\n" + a);
+            Console.WriteLine("b=\n" + b);
+            Console.WriteLine("c=\n" + c);
+
+            Matrix.Madd(a, v0, v1, ref v2);
+            Console.WriteLine("Madd:");
+            Console.WriteLine("a=\n" + a);
+            Console.WriteLine("v0=\n" + v0);
+            Console.WriteLine("v1=\n" + v1);
+            Console.WriteLine("v2=\n" + v2);
+
+            Matrix.MSub(a, 10, ref c);
+            Console.WriteLine("Msub:");
+            Console.WriteLine("a=\n" + a);
+            Console.WriteLine("c=\n" + c);
+
+
+            Vector.MSub(v0, 10, ref v1);
+            Console.WriteLine("Msub:");
+            Console.WriteLine("v0=\n" + v0);
+            Console.WriteLine("v1=\n" + v1);
+
+            Matrix.MultiplyToMatrix(v0, v1, ref c);
+            Console.WriteLine("VECVECMUL:");
+            Console.WriteLine("v0=\n" + v0);
+            Console.WriteLine("v1=\n" + v1);
+            Console.WriteLine("c=\n" + c);
+
+            Matrix.TransposedMultiply(a, v0, v1, ref v2);
+            Console.WriteLine("TransposedMultiply:");
+            Console.WriteLine("a=\n" + a);
+            Console.WriteLine("v0=\n" + v0);
+            Console.WriteLine("v1=\n" + v1);
+            Console.WriteLine("v2=\n" + v2);
+
 
             Console.ReadLine();
 

@@ -105,6 +105,9 @@
     <Folder Include="GA\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OpenCL\vector.cl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="OpenCL\matrix.cl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

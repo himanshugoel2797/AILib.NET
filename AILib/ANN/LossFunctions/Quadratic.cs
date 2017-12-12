@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AILib.Math;
+using AILib.Math.GPU;
 
 namespace AILib.ANN.LossFunctions
 {
@@ -31,7 +31,8 @@ namespace AILib.ANN.LossFunctions
             for (int i = 0; i < n.Length; i++)
                 n[i] = LossDeriv(output[i], expectedOutput[i]);
 
-            return Vector.Hadamard(n, net.ActivationFunctions[net.LayerCount - 1].DerivActivation(logit));
+            //return Vector.Hadamard(n, net.ActivationFunctions[net.LayerCount - 1].DerivActivation(logit));
+            return null;
         }
     }
 }
