@@ -133,18 +133,18 @@ namespace NeuralNetworkTest
 
                     //Train discriminator
                     var (Dz_a, Dz_z) = discriminator.Train(real_in[i]);
-                    var (Dz_nabla_w, Dz_nabla_b) = GradientSolver.Solve(discriminator, Dz_a, Dz_z, new Vector( new float[] { 1 }));
+                    var (Dz_nabla_w, Dz_nabla_b) = discriminator.Solver.Solve(Dz_a, Dz_z, new Vector( new float[] { 1 }));
                     (discriminator.Weights, discriminator.Biases) = discriminator.Optimizer.Optimize(discriminator.Weights, discriminator.Biases, Dz_nabla_w, Dz_nabla_b, 3f / 1000);
 
                     var (DGz_a, DGz_z) = discriminator.Train(Gz);
-                    var (DGz_nabla_w, DGz_nabla_b) = GradientSolver.Solve(discriminator, DGz_a, DGz_z, new Vector(new float[] { 0 }));
+                    var (DGz_nabla_w, DGz_nabla_b) = discriminator.Solver.Solve(DGz_a, DGz_z, new Vector(new float[] { 0 }));
                     (discriminator.Weights, discriminator.Biases) = discriminator.Optimizer.Optimize(discriminator.Weights, discriminator.Biases, DGz_nabla_w, DGz_nabla_b, 3f / 1000);
 
                     //Train Generator
                     //Now compute the error from the output of D, but don't change anything until G
                     NeuralNetwork chained = new NeuralNetwork(generator, discriminator);
                     var (Gz_a_ex, Gz_z_ex) = chained.Train(generator_input);
-                    var (Gz_nabla_w_ex, Gz_nabla_b_ex) = GradientSolver.Solve(chained, Gz_a_ex, Gz_z_ex, new Vector(new float[] { 1 }));
+                    var (Gz_nabla_w_ex, Gz_nabla_b_ex) = chained.Solver.Solve(Gz_a_ex, Gz_z_ex, new Vector(new float[] { 1 }));
 
                     Matrix[] Gz_nabla_w = new ArraySegment<Matrix>(Gz_nabla_w_ex, 0, generator.LayerCount).Array;
                     Vector[] Gz_nabla_b = new ArraySegment<Vector>(Gz_nabla_b_ex, 0, generator.LayerCount).Array;

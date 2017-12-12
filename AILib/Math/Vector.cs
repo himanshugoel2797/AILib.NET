@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AILib.Math
 {
+    [Serializable]
     public class Vector
     {
         private float[] data;
@@ -30,6 +31,11 @@ namespace AILib.Math
             data = new float[len];
             Length = len;
             v.CopyTo(data);
+        }
+
+        private Vector()
+        {
+
         }
 
         public float this[int x]
@@ -348,8 +354,6 @@ namespace AILib.Math
             return ret;
         }
 
-
-
         public static implicit operator float[] (Vector a)
         {
             return a.data;
@@ -370,7 +374,7 @@ namespace AILib.Math
             float res = 0;
 
             for (int i = 0; i < tmp.Length; i++)
-                res += tmp[i];
+                res += tmp.data[i];
 
             return res;
         }

@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +53,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenCL.Net, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCL.Net.2.2.9.0\lib\net40\OpenCL.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -69,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ANN\ActivationFunctions\LeakyReLU.cs" />
+    <Compile Include="ANN\ActivationFunctions\ScaledSoftStep.cs" />
     <Compile Include="ANN\ActivationFunctions\Sigmoid.cs" />
     <Compile Include="ANN\ActivationFunctions\SoftStep.cs" />
     <Compile Include="ANN\ActivationFunctions\Tanh.cs" />
@@ -81,7 +87,15 @@
     <Compile Include="ANN\NeuralNetwork.cs" />
     <Compile Include="ANN\ActivationFunctions\ReLU.cs" />
     <Compile Include="ANN\Optimizers\SGD.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="CoreLibrary.cs" />
+    <Compile Include="Math\GPU\Accelerator.cs" />
+    <Compile Include="Math\GPU\ComputeImage2D.cs" />
+    <Compile Include="Math\GPU\ComputeKernel.cs" />
+    <Compile Include="Math\GPU\ComputeProgram.cs" />
+    <Compile Include="Math\GPU\Matrix.cs" />
+    <Compile Include="Math\GPU\MatrixAccelerator.cs" />
+    <Compile Include="Math\GPU\MemoryBuffer.cs" />
+    <Compile Include="Math\GPU\Vector.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\RandomExtensions.cs" />
     <Compile Include="Math\Vector.cs" />
@@ -91,7 +105,17 @@
     <Folder Include="GA\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OpenCL\matrix.cl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets" Condition="Exists('..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCL.Net.2.2.9.0\build\net40\OpenCL.Net.targets'))" />
+  </Target>
 </Project>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AILib.Math
 {
+    [Serializable]
     public class Matrix
     {
         private float[][] data;
@@ -20,6 +21,11 @@ namespace AILib.Math
             for (int i = 0; i < w; i++) data[i] = new float[h];
             Width = w;
             Height = h;
+        }
+
+        private Matrix()
+        {
+
         }
 
         public float this[int x, int y]
@@ -109,16 +115,26 @@ namespace AILib.Math
 
         public static Vector operator *(Matrix a, Vector b)
         {
-            Vector c = new Vector(a.Height);
+            float[] tmp = new float[a.Height];
 
-            Matrix res = a * (Matrix)b;
-
-            for (int i = 0; i < c.Length; i++)
+            for (int j = 0; j < a.Width; j++)
             {
-                c[i] = res.data[0][i];
+                float b_v = b[j];
+
+                int i = 0;
+                int simdLength = Vector<float>.Count;
+                for (i = 0; i <= tmp.Length - simdLength; i += simdLength)
+                {
+                    var res = new Vector<float>(a.data[j], i) * b_v;
+                    res.CopyTo(tmp, i);
+                }
+                for (; i < tmp.Length; ++i)
+                {
+                    tmp[i] += a.data[j][i] * b_v;
+                }
             }
 
-            return c;
+            return new Vector(tmp);
         }
 
         public static Matrix operator *(Matrix a, float b)
@@ -176,6 +192,31 @@ namespace AILib.Math
             }
 
             return res;
+        }
+
+        public static Vector TransposedMultiply(Matrix a, Vector b)
+        {
+            if (a.Height != b.Length)
+                throw new ArgumentException();
+
+            Vector res = new Vector(a.Width);
+
+            for (int i = 0; i < res.Length; i++)
+            {
+                res[i] = Vector.Dot(new Vector(a.data[i]), b);
+            }
+
+            return res;
+        }
+        
+        public static Matrix MultiplyToMatrix(Vector a, Vector b)
+        {
+            Matrix r = new Matrix(b.Length, a.Length);
+            for (int i = 0; i < r.Width; i++)
+            {
+                r.data[i] = a * b[i];
+            }
+            return r;
         }
 
         public static Matrix Transpose(Matrix a)

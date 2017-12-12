@@ -22,6 +22,7 @@ namespace AILib.ANN
         public IActivationFunction[] ActivationFunctions { get { return function; } }
         public ILossFunction LossFunction { get { return lossFunc; } }
         public IOptimizer Optimizer { get; set; }
+        public GradientSolver Solver { get; set; }
 
         public NeuralNetwork(int[] layers, IActivationFunction[] function, ILossFunction loss, IOptimizer optimizer)
         {
@@ -54,6 +55,8 @@ namespace AILib.ANN
 
                 w = h;
             }
+
+            this.Solver = new GradientSolver(this);
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace AILib.ANN
             int layerCount = 1;
             for (int i = 0; i < nets.Length; i++)
                 layerCount += (nets[i].LayerCount - 1);
-            
+
             this.layers = new int[layerCount];
             this.function = new IActivationFunction[layerCount];
             this.lossFunc = nets[0].LossFunction;
@@ -75,9 +78,9 @@ namespace AILib.ANN
             this.Biases = new Vector[layerCount];
 
             int idx = 1;
-            for(int i = 0; i < nets.Length; i++)
+            for (int i = 0; i < nets.Length; i++)
             {
-                for(int j = 1; j < nets[i].LayerCount; j++)
+                for (int j = 1; j < nets[i].LayerCount; j++)
                 {
                     Weights[idx] = nets[i].Weights[j];
                     Biases[idx] = nets[i].Biases[j];
@@ -88,6 +91,8 @@ namespace AILib.ANN
                     idx++;
                 }
             }
+
+            this.Solver = new GradientSolver(this);
         }
 
         public float[] Activate(float[] inputs)
@@ -102,18 +107,20 @@ namespace AILib.ANN
             return res;
         }
 
+        Vector[] a;
+        Vector[] z;
 
         public (Vector[], Vector[]) Train(float[] input)
         {
-            Vector[] a = new Vector[layers.Length];
-            Vector[] z = new Vector[layers.Length];
+            if (a == null) a = new Vector[layers.Length];
+            if (z == null) z = new Vector[layers.Length];
 
-            a[0] = new Vector(input);
+            if (a[0] == null) a[0] = new Vector(input);
 
             for (int i = 1; i < layers.Length; i++)
             {
-                a[i] = new Vector(layers[i]);
-                z[i - 1] = new Vector(layers[i]);
+                if (a[i] == null) a[i] = new Vector(layers[i]);
+                if (z[i - 1] == null) z[i - 1] = new Vector(layers[i]);
 
                 z[i - 1] = (Weights[i] * a[i - 1]) + Biases[i];
                 a[i] = ActivationFunctions[i].Activation(z[i - 1]);

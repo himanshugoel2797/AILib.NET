@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace AILib
 {
-    public class Class1
+    public class CoreLibrary
     {
+        public static void Initialize()
+        {
+            AILib.Math.GPU.Accelerator.Initialize();
+        }
     }
 }
