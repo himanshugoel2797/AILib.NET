@@ -26,6 +26,11 @@ namespace AILib.Math
             data = f;
         }
 
+        public static void MSub(Vector vector1, float rate, ref Vector vector2)
+        {
+            vector2 -= vector1 * rate;
+        }
+
         private Vector(Vector<float> v, int len)
         {
             data = new float[len];

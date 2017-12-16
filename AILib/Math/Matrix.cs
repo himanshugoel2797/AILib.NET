@@ -23,6 +23,11 @@ namespace AILib.Math
             Height = h;
         }
 
+        public static void MSub(Matrix matrix1, float rate, ref Matrix matrix2)
+        {
+            matrix2 -= matrix1 * rate;
+        }
+
         private Matrix()
         {
 
@@ -77,6 +82,11 @@ namespace AILib.Math
                 }
 
             return c;
+        }
+
+        public static void Multiply(Matrix a, Matrix b, ref Matrix c)
+        {
+            c = a * b;
         }
 
         public static Matrix operator -(Matrix a, Matrix b)
@@ -137,6 +147,11 @@ namespace AILib.Math
             return new Vector(tmp);
         }
 
+        public static void Madd(Matrix matrix, Vector res1, Vector vector, ref Vector res2)
+        {
+            res2 = (matrix * res1) + vector;
+        }
+
         public static Matrix operator *(Matrix a, float b)
         {
             Matrix c = new Matrix(a.Width, a.Height);
@@ -194,29 +209,29 @@ namespace AILib.Math
             return res;
         }
 
-        public static Vector TransposedMultiply(Matrix a, Vector b)
+        public static void TransposedMultiply(Matrix a, Vector b, Vector c, ref Vector res)
         {
             if (a.Height != b.Length)
                 throw new ArgumentException();
 
-            Vector res = new Vector(a.Width);
+            //Vector res = new Vector(a.Width);
 
             for (int i = 0; i < res.Length; i++)
             {
-                res[i] = Vector.Dot(new Vector(a.data[i]), b);
+                res[i] = Vector.Dot(new Vector(a.data[i]), Vector.Hadamard(b, c));
             }
 
-            return res;
+            //return res;
         }
         
-        public static Matrix MultiplyToMatrix(Vector a, Vector b)
+        public static void MultiplyToMatrix(Vector a, Vector b, ref Matrix r)
         {
-            Matrix r = new Matrix(b.Length, a.Length);
+            //Matrix r = new Matrix(b.Length, a.Length);
             for (int i = 0; i < r.Width; i++)
             {
                 r.data[i] = a * b[i];
             }
-            return r;
+            //return r;
         }
 
         public static Matrix Transpose(Matrix a)

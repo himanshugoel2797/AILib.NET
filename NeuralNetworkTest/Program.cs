@@ -8,7 +8,11 @@ using AILib.ANN;
 using AILib.ANN.ActivationFunctions;
 using AILib.ANN.LossFunctions;
 using AILib.ANN.Optimizers;
+#if CPUMATH
+using AILib.Math;
+#else
 using AILib.Math.GPU;
+#endif
 
 namespace NeuralNetworkTest
 {
@@ -18,6 +22,7 @@ namespace NeuralNetworkTest
         {
             CoreLibrary.Initialize();
 
+            /*
             Matrix a = new Matrix(2, 2);
             Matrix b = new Matrix(2, 2);
             Matrix c = new Matrix(2, 2);
@@ -81,11 +86,12 @@ namespace NeuralNetworkTest
 
 
             Console.ReadLine();
+            */
 
-            /*
             AnimeGANTest.GAN();
             Console.ReadLine();
             return;
+            /*
             NeuralNetwork net = new NeuralNetwork(new int[] { 2, 2, 1 }, new IActivationFunction[] { null, new Sigmoid(), new Sigmoid() }, new Quadratic(), new SGD());
 
             float[][] inputs = new float[][] { new float[] { 0, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 }, new float[] { 1, 1 } };

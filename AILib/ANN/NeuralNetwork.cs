@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if CPUMATH
+using AILib.Math;
+#else
 using AILib.Math.GPU;
+#endif
 using Superbest_random;
 
 namespace AILib.ANN

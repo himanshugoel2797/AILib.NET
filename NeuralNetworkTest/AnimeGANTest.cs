@@ -12,7 +12,11 @@ using AILib.ANN;
 using AILib.ANN.ActivationFunctions;
 using AILib.ANN.LossFunctions;
 using AILib.ANN.Optimizers;
+#if CPUMATH
+using AILib.Math;
+#else
 using AILib.Math.GPU;
+#endif
 using Superbest_random;
 
 namespace NeuralNetworkTest
